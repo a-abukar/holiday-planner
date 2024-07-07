@@ -85,7 +85,8 @@ resource "aws_instance" "holiday_planner_instance" {
   subnet_id              = var.subnet_id
 
   tags = {
-    Name = "holiday-planner-ec2"
+    Name        = "holiday-planner-ec2"
+    Environment = "Production"
   }
 }
 
