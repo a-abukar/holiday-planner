@@ -43,7 +43,7 @@ jobs:
       - name: Get Instance IP
         id: get_ip
         run: |
-          INSTANCE_IP=$(terraform output -raw ec2_instance_public_ip)
+          INSTANCE_IP=$(terraform output -raw ec2_instance_public_ip | tr -d '\r')
           echo "INSTANCE_IP=$INSTANCE_IP" >> $GITHUB_ENV
           echo "instance_ip=$INSTANCE_IP" >> $GITHUB_OUTPUT
         working-directory: terraform
