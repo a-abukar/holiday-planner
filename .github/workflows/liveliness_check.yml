@@ -16,6 +16,7 @@ jobs:
 
       - name: Run Liveliness Check
         run: |
-          INSTANCE_IP=${{ github.event.workflow_run.outputs.instance_ip }}
+          INSTANCE_IP=${{ needs.deploy.outputs.instance_ip }}
           echo "Checking http://$INSTANCE_IP:9000"
           curl --fail http://$INSTANCE_IP:9000 || exit 1
+    needs: deploy
