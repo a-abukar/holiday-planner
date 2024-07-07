@@ -1,0 +1,21 @@
+name: Liveliness Check
+
+on:
+  workflow_run:
+    workflows: ["Deploy Terraform"]
+    types:
+      - completed
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Liveliness Check
+        run: |
+          INSTANCE_IP=${{ github.event.workflow_run.outputs.instance_ip }}
+          echo "Checking http://$INSTANCE_IP:9000"
+          curl --fail http://$INSTANCE_IP:9000 || exit 1

@@ -1,0 +1,43 @@
+name: Deploy Terraform
+
+on:
+  workflow_run:
+    workflows: ["Build Docker Image"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform Init
+        run: terraform init
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_aws_region: ${{ secrets.AWS_REGION }}
+          TF_VAR_vpc_id: ${{ secrets.VPC_ID }}
+          TF_VAR_subnet_id: ${{ secrets.SUBNET_ID }}
+
+      - name: Terraform Apply
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_aws_region: ${{ secrets.AWS_REGION }}
+          TF_VAR_vpc_id: ${{ secrets.VPC_ID }}
+          TF_VAR_subnet_id: ${{ secrets.SUBNET_ID }}
+        run: terraform apply -auto-approve
+
+      - name: Get Instance IP
+        id: get_ip
+        run: echo "::set-output name=instance_ip::$(terraform output -raw ec2_instance_public_ip)"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
