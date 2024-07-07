@@ -40,6 +40,12 @@ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip
 unzip awscliv2.zip
 sudo ./aws/install
 
+# Install and start the SSM agent
+log "Installing and starting SSM agent"
+sudo snap install amazon-ssm-agent --classic
+sudo systemctl start amazon-ssm-agent
+sudo systemctl enable amazon-ssm-agent
+
 # Log into ECR
 log "Logging into ECR"
 aws ecr get-login-password --region eu-west-2 | sudo docker login --username AWS --password-stdin 665727140634.dkr.ecr.eu-west-2.amazonaws.com

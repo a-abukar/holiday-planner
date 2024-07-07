@@ -43,15 +43,27 @@ jobs:
           INSTANCE_IDS=$(aws ec2 describe-instances --filters "Name=tag:Environment,Values=Production" --query "Reservations[].Instances[].InstanceId" --output text)
           echo "Instance IDs: $INSTANCE_IDS"
 
-      - name: Trigger EC2 to Update Docker Container
-        run: |
-          INSTANCE_IDS=$(aws ec2 describe-instances --filters "Name=tag:Environment,Values=Production" --query "Reservations[].Instances[].InstanceId" --output text)
-          aws ssm send-command \
-            --document-name "UpdateDockerContainer" \
-            --targets "Key=instanceids,Values=$INSTANCE_IDS" \
-            --comment "Update Docker Container" \
-            --parameters '{}' \
-            --region ${{ secrets.AWS_REGION }}
+      # - name: Trigger EC2 to Update Docker Container
+      #   run: |
+      #     INSTANCE_IDS=$(aws ec2 describe-instances --filters "Name=tag:Environment,Values=Production" --query "Reservations[].Instances[].InstanceId" --output text)
+      #     echo "Instance IDs: $INSTANCE_IDS"
+      #     if [ -z "$INSTANCE_IDS" ]; then
+      #       echo "No instances found with the specified tag. Exiting."
+      #       exit 1
+      #     fi
+      #     TARGETS=$(echo $INSTANCE_IDS | awk '{for(i=1;i<=NF;i++) printf("{\"Key\":\"instanceIds\",\"Values\":[\"%s\"]}%s", $i, i==NF?ORS:",")} ')
+      #     echo "SSM Targets: [$TARGETS]"
+      #     aws ssm send-command \
+      #       --document-name "UpdateDockerContainer" \
+      #       --targets "[$TARGETS]" \
+      #       --comment "Update Docker Container" \
+      #       --parameters '{}' \
+      #       --region eu-west-2
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_REGION: ${{ secrets.AWS_REGION }}
+
 
       - name: Output image tag
         id: image_tag
