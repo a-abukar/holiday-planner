@@ -16,6 +16,8 @@ jobs:
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false
 
       - name: Change directory to terraform
         run: cd terraform
@@ -40,11 +42,12 @@ jobs:
           TF_VAR_vpc_id: ${{ secrets.VPC_ID }}
           TF_VAR_subnet_id: ${{ secrets.SUBNET_ID }}
 
-      - name: Get Instance IP
+      - name: Get Instance IP and Generate Link
         id: get_ip
         run: |
           INSTANCE_IP=$(terraform output -raw ec2_instance_public_ip | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}')
-          echo "Access your application at: http://$INSTANCE_IP:9000"
+          APP_URL="http://$INSTANCE_IP:9000"
+          echo "Access your application at: $APP_URL"
         working-directory: terraform
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -53,8 +56,9 @@ jobs:
       - name: Liveliness Check
         run: |
           INSTANCE_IP=$(terraform output -raw ec2_instance_public_ip | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}')
-          echo "Performing liveliness check on http://$INSTANCE_IP:9000"
-          curl --fail http://$INSTANCE_IP:9000 || exit 1
+          APP_URL="http://$INSTANCE_IP:9000"
+          echo "Performing liveliness check on $APP_URL"
+          curl --fail $APP_URL || { echo "Liveliness check failed"; exit 1; }
         working-directory: terraform
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
