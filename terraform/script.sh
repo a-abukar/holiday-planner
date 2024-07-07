@@ -43,8 +43,8 @@ sudo ./aws/install
 # Install and start the SSM agent
 log "Installing and starting SSM agent"
 sudo snap install amazon-ssm-agent --classic
-sudo systemctl start amazon-ssm-agent
-sudo systemctl enable amazon-ssm-agent
+sudo systemctl start snap.amazon-ssm-agent.amazon-ssm-agent.service
+sudo systemctl enable snap.amazon-ssm-agent.amazon-ssm-agent.service
 
 # Log into ECR
 log "Logging into ECR"
