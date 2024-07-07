@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "2.2",
+  "description": "Pull the latest Docker image and restart the container",
+  "mainSteps": [
+    {
+      "action": "aws:runShellScript",
+      "name": "updateDockerContainer",
+      "inputs": {
+        "runCommand": [
+          "sudo docker pull 665727140634.dkr.ecr.eu-west-2.amazonaws.com/holiday-planner:latest",
+          "sudo docker stop holiday-planner || true",
+          "sudo docker rm holiday-planner || true",
+          "sudo docker run -d --name holiday-planner -p 9000:9000 665727140634.dkr.ecr.eu-west-2.amazonaws.com/holiday-planner:latest"
+        ]
+      }
+    }
+  ]
+}

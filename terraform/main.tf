@@ -31,7 +31,26 @@ resource "aws_iam_role_policy" "ec2_policy" {
           "ecr:GetDownloadUrlForLayer",
           "ecr:BatchGetImage",
           "ecr:BatchCheckLayerAvailability",
-          "ecr:GetAuthorizationToken"
+          "ecr:GetAuthorizationToken",
+          "ssm:DescribeInstanceInformation",
+          "ssm:ListInstanceAssociations",
+          "ssm:DescribeInstanceAssociationsStatus",
+          "ssm:GetDeployablePatchSnapshotForInstance",
+          "ssm:DescribePatchGroupState",
+          "ssm:DescribeInstancePatches",
+          "ssm:DescribePatchProperties",
+          "ssm:DescribeInstancePatchStates",
+          "ssm:DescribeInstancePatchStatesForPatchGroup",
+          "ssm:DescribeDocument",
+          "ssm:GetDeployablePatchSnapshotForInstance",
+          "ssm:DescribePatchGroupState",
+          "ssm:GetParameters",
+          "ssm:ListTagsForResource",
+          "ssm:GetParameterHistory",
+          "ssm:DescribeParameters",
+          "ssm:DescribeDocumentParameters",
+          "ssm:GetDocument",
+          "ssm:ListDocuments"
         ],
         Resource = "*"
       }

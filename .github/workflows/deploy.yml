@@ -42,6 +42,9 @@ jobs:
           TF_VAR_vpc_id: ${{ secrets.VPC_ID }}
           TF_VAR_subnet_id: ${{ secrets.SUBNET_ID }}
 
+      - name: Wait for EC2 Instance to Initialize
+        run: sleep 15
+
       - name: Get Instance IP and Generate Link
         id: get_ip
         run: |
