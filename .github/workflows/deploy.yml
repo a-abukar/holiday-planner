@@ -44,7 +44,9 @@ jobs:
         id: get_ip
         run: |
           INSTANCE_IP=$(terraform output -raw ec2_instance_public_ip)
+          echo "INSTANCE_IP: $INSTANCE_IP"
           echo "INSTANCE_IP=$INSTANCE_IP" >> $GITHUB_ENV
+          echo "::set-output name=instance_ip::$INSTANCE_IP"
         working-directory: terraform
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
